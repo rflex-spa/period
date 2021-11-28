@@ -1,0 +1,30 @@
+{
+    "name": "rflex/period",
+    "description": "Customized library for comparing periods easily. This is an extension of Carbon\\Period.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "David Miranda Atenas",
+            "email": "dmiranda@rflex.cl"
+        }
+    ],
+    "require": {
+        "nesbot/carbon": "^2.54"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.23",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rflex\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rflex\\PeriodServiceProvider"
+            ]
+        }
+    }
+}
