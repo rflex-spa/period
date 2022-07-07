@@ -2,19 +2,17 @@
 
 You can find the `CarbonPeriod` documentation [here](https://carbon.nesbot.com/docs/#api-period).
 
-# Installation
+# Installation & Usage
 ```sh
 composer require rflex/period
 ```
 
-# Usage
 Import the class:
 ```php
 use Rflex\Period;
 ```
 
 # Available methods
-
 
 ## addDay() and addDays($days)
 Add one or a number of days to the period.
