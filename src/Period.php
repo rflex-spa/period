@@ -2,7 +2,6 @@
 
 namespace Rflex;
 
-use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
 class Period extends CarbonPeriod
