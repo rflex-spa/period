@@ -17,15 +17,21 @@ use Rflex\Period;
 ## addDay() and addDays($days)
 Add one or a number of days to the period.
 ```php
-$period->addDay();
-$period->addDays(5);
+$period->addDay(true, false); // Add a day to the start of the period.
+$period->addDays(5, true, false); // Add five days to the start of the period.
 ```
 
 ## subDay() and subDays($days)
 Subtract one or a number of days to the period.
 ```php
-$period->subDay();
-$period->subDays(3);
+$period->subDay(false, true); // Subtract a day to the end of the period.
+$period->subDays(3, false, true); // Subtract three days to the end of the period.
+```
+
+## getSeconds()
+Returns the total number of seconds of the period.
+```php
+$period->getSeconds();
 ```
 
 ## getMinutes()
@@ -56,6 +62,12 @@ $period = Period::between(Carbon::now(), Carbon::now()->addDay());
 $period2 = Period::between(carbon::now(), Carbon::now()->addDays(2));
 $period->touches($period2);
 // returns true
+```
+
+## setLengthInSeconds($seconds)
+Set the length of the period in seconds from the start.
+```php
+$period->setLengthInSeconds(3600);
 ```
 
 ## setLengthInMinutes($minutes)
