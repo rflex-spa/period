@@ -5,8 +5,10 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Rflex\Period;
 
-final class SettersTest extends TestCase {
-    public function testSetLengthInSecondsThirtySeconds(): void {
+final class SettersTest extends TestCase
+{
+    public function testSetLengthInSecondsThirtySeconds(): void
+    {
         $period = Period::create('2023-01-01', '2023-01-10');
         $period->setLengthInSeconds(30);
 
@@ -16,7 +18,8 @@ final class SettersTest extends TestCase {
         $this->assertEquals($expected->getEndDate(), $period->getEndDate());
     }
 
-    public function testSetLengthInMinutesFiveMinutes(): void {
+    public function testSetLengthInMinutesFiveMinutes(): void
+    {
         $period = Period::create('2023-01-01', '2023-01-10');
         $period->setLengthInMinutes(5);
 
@@ -26,7 +29,8 @@ final class SettersTest extends TestCase {
         $this->assertEquals($expected->getEndDate(), $period->getEndDate());
     }
 
-    public function testSetLengthInHoursEightHours(): void {
+    public function testSetLengthInHoursEightHours(): void
+    {
         $period = Period::create('2023-01-01', '2023-01-10');
         $period->setLengthInHours(8);
 
