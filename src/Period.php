@@ -2,87 +2,21 @@
 
 namespace Rflex;
 
-use Carbon\CarbonPeriod;
+use Rflex\CarbonExtended\CarbonPeriodExtended;
 
-class Period extends CarbonPeriod
+class Period extends CarbonPeriodExtended
 {
     /**
-     * Check if the period has another period inside.
-     *
-     * @param Period
-     *
-     * @return bool
+     * Check if the period contains another period inside.
      */
-    public function has(Period $period) {
+    public function has(Period $period): bool {
         return $this->contains($period->getStartDate()) && $this->contains($period->getEndDate());
     }
 
     /**
-     * Add one day to the period.
-     *
-     * @return void
-     */
-    public function addDay() {
-        $this->setDates($this->getStartDate()->addDay(), $this->getEndDate()->addDay());
-    }
-
-    /**
-     * Add a number of days to the period.
-     *
-     * @param int
-     *
-     * @return void
-     */
-    public function addDays(int $days) {
-        $this->setDates($this->getStartDate()->addDays($days), $this->getEndDate()->addDays($days));
-    }
-
-    /**
-     * Subtract one day to the period.
-     *
-     * @return void
-     */
-    public function subDay() {
-        $this->setDates($this->getStartDate()->subDay(), $this->getEndDate()->subDay());
-    }
-
-    /**
-     * Subtract a number of days to the period.
-     *
-     * @param int
-     *
-     * @return void
-     */
-    public function subDays(int $days) {
-        $this->setDates($this->getStartDate()->subDays($days), $this->getEndDate()->subDays($days));
-    }
-
-    /**
-     * Returns the total number of minutes of the period.
-     *
-     * @return int
-     */
-    public function getMinutes() {
-        return $this->getEndDate()->diffInMinutes($this->getStartDate());
-    }
-
-    /**
-     * Returns the total number of hours of the period.
-     *
-     * @return int
-     */
-    public function getHours() {
-        return $this->getEndDate()->diffInHours($this->getStartDate());
-    }
-
-    /**
      * Get the shared minutes between two periods if any.
-     *
-     * @param Period
-     *
-     * @return int
      */
-    public function overlappedMinutes(Period $period) {
+    public function overlappedMinutes(Period $period): int {
         if ($this->has($period)) {
             return $period->getMinutes();
         }
@@ -104,34 +38,23 @@ class Period extends CarbonPeriod
 
     /**
      * Checks if a period overlaps with another period, despite the amount of overlapped time.
-     *
-     * @param Period
-     *
-     * @return boolean
      */
-    public function touches(Period $period) {
+    public function touches(Period $period): bool {
         return ($this->overlappedMinutes($period) > 0) ? true : false;
     }
 
     /**
-     * Set the length of the period in minutes from the start.
-     *
-     * @param int
-     *
-     * @return void
+     * Returns the total seconds of difference between the start/end of a period and an event.
+     * point = 0 (start)
+     * point = 1 (end)
+     * 
+     * Negative result means that the event is before the period point.
+     * Zero means that the event is at the same moment than the period point.
+     * Positive result means that the event is after the period point.
      */
-    public function setLengthInMinutes(int $minutes) {
-        $this->setEndDate($this->getStartDate()->addMinutes($minutes));
-    }
+    public function differenceWithEvent(Event $event, int $point): int {
+        $comparationPoint = ($point === 0) ? $this->getStartDate() : $this->getEndDate();
 
-    /**
-     * Set the length of the period in hours from the start.
-     *
-     * @param int
-     *
-     * @return void
-     */
-    public function setLengthInHours(int $hours) {
-        $this->setEndDate($this->getStartDate()->addHours($hours));
+        return ($event->timestamp - $comparationPoint->timestamp);
     }
 }
