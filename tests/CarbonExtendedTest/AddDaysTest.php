@@ -5,8 +5,10 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Rflex\Period;
 
-final class AddDaysTest extends TestCase {
-    public function testAddDaysToTheStart(): void {
+final class AddDaysTest extends TestCase
+{
+    public function testAddDaysToTheStart(): void
+    {
         $period = Period::create('2023-01-01', '2023-01-10');
         $period->addDays(3, true, false);
 
@@ -16,7 +18,8 @@ final class AddDaysTest extends TestCase {
         $this->assertEquals($expected->getEndDate(), $period->getEndDate());
     }
 
-    public function testAddDaysToTheEnd(): void {
+    public function testAddDaysToTheEnd(): void
+    {
         $period = Period::create('2023-01-01', '2023-01-10');
         $period->addDays(5, false, true);
 
@@ -26,7 +29,8 @@ final class AddDaysTest extends TestCase {
         $this->assertEquals($expected->getEndDate(), $period->getEndDate());
     }
 
-    public function testMoveThePeriodSixDaysForward(): void {
+    public function testMoveThePeriodSixDaysForward(): void
+    {
         $period = Period::create('2023-01-01', '2023-01-10');
         $period->addDays(6, true, true);
 

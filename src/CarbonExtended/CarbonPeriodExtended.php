@@ -9,7 +9,8 @@ class CarbonPeriodExtended extends CarbonPeriod
     /**
      * Add one day to the Carbon period.
      */
-    public function addDay(bool $start, bool $end): void {
+    public function addDay(bool $start, bool $end): void
+    {
         if ($start) {
             $this->setStartDate($this->getStartDate()->addDay());
         }
@@ -22,7 +23,8 @@ class CarbonPeriodExtended extends CarbonPeriod
     /**
      * Add a number of days to the period.
      */
-    public function addDays(int $days, bool $start, bool $end): void {
+    public function addDays(int $days, bool $start, bool $end): void
+    {
         if ($start) {
             $this->setStartDate($this->getStartDate()->addDays($days));
         }
@@ -35,7 +37,8 @@ class CarbonPeriodExtended extends CarbonPeriod
     /**
      * Subtract one day to the period.
      */
-    public function subDay(bool $start, bool $end): void {
+    public function subDay(bool $start, bool $end): void
+    {
         if ($start) {
             $this->setStartDate($this->getStartDate()->subDay());
         }
@@ -48,7 +51,8 @@ class CarbonPeriodExtended extends CarbonPeriod
     /**
      * Subtract a number of days to the period.
      */
-    public function subDays(int $days, bool $start, bool $end): void {
+    public function subDays(int $days, bool $start, bool $end): void
+    {
         if ($start) {
             $this->setStartDate($this->getStartDate()->subDays($days));
         }
@@ -61,42 +65,48 @@ class CarbonPeriodExtended extends CarbonPeriod
     /**
      * Returns the total number of seconds of the period.
      */
-    public function getSeconds(): int {
+    public function getSeconds(): int
+    {
         return $this->getEndDate()->diffInSeconds($this->getStartDate());
     }
 
     /**
      * Returns the total number of minutes of the period.
      */
-    public function getMinutes(): int {
+    public function getMinutes(): int
+    {
         return $this->getEndDate()->diffInMinutes($this->getStartDate());
     }
 
     /**
      * Returns the total number of hours of the period.
      */
-    public function getHours(): int {
+    public function getHours(): int
+    {
         return $this->getEndDate()->diffInHours($this->getStartDate());
     }
 
     /**
      * Set the length of the period in seconds from the start.
      */
-    public function setLengthInSeconds(int $seconds): void {
+    public function setLengthInSeconds(int $seconds): void
+    {
         $this->setEndDate($this->getStartDate()->addSeconds($seconds));
     }
 
     /**
      * Set the length of the period in minutes from the start.
      */
-    public function setLengthInMinutes(int $minutes): void {
+    public function setLengthInMinutes(int $minutes): void
+    {
         $this->setEndDate($this->getStartDate()->addMinutes($minutes));
     }
 
     /**
      * Set the length of the period in hours from the start.
      */
-    public function setLengthInHours(int $hours): void {
+    public function setLengthInHours(int $hours): void
+    {
         $this->setEndDate($this->getStartDate()->addHours($hours));
     }
 }
