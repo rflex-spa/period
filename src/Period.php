@@ -21,8 +21,9 @@ class Period extends CarbonPeriodExtended
     public function union(Period $period, $intersects = false): Period|null
     {
         if ($intersects) {
-            if (!$this->intersects($period))
+            if (!$this->intersects($period)) {
                 return null;
+            }
         }
 
         $startDate = $this->getStartDate()->min($period->getStartDate());
@@ -65,16 +66,17 @@ class Period extends CarbonPeriodExtended
     /**
      * Subtract two periods and returns the:
      * Total time of the resultant periods
-     * An array with all the periods
+     * An array with all the periods.
      */
-    public function difference(Period $subtractingPeriod): array|null {
+    public function difference(Period $subtractingPeriod): array|null
+    {
         if ($this->intersects($subtractingPeriod)) {
             // The period holds the subtracting period.
             if ($this->has($subtractingPeriod)) {
                 $first = Period::create($this->getStartDate(), $subtractingPeriod->getStartDate()->subSeconds(1));
                 $second = Period::create($subtractingPeriod->getEndDate()->addSeconds(1), $this->getEndDate());
 
-                return [($first->getSeconds() + $second->getSeconds()), 'periods' => array($first, $second)];
+                return [$first->getSeconds() + $second->getSeconds(), 'periods' => [$first, $second]];
             }
 
             // The period was subtracted on it's entirety.
@@ -85,15 +87,15 @@ class Period extends CarbonPeriodExtended
             // The subtracting period is at the end of the period.
             if ($this->contains($subtractingPeriod->getStartDate())) {
                 $result = Period::create($this->getStartDate(), $subtractingPeriod->getStartDate()->subSeconds(1));
-    
-                return [$result->getSeconds(), 'periods' => array($result)];
+
+                return [$result->getSeconds(), 'periods' => [$result]];
             }
 
             // The subtracting period is at the beginning of the period.
             if ($this->contains($subtractingPeriod->getEndDate())) {
                 $result = Period::create($subtractingPeriod->getEndDate()->addSeconds(1), $this->getEndDate());
-    
-                return [$result->getSeconds(), 'periods' => array($result)];
+
+                return [$result->getSeconds(), 'periods' => [$result]];
             }
         }
 

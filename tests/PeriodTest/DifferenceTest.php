@@ -41,7 +41,8 @@ final class DifferenceTest extends TestCase
         $this->assertEquals('2023-01-18 12:00:00', $resultPeriod->getEndDate()->toDateTimeString());
     }
 
-    public function testDifferencePeriodContainedInsideAnother(): void {
+    public function testDifferencePeriodContainedInsideAnother(): void
+    {
         $period = Period::create('2023-09-10 00:00:00', '2023-09-20 23:59:59');
         $anotherPeriod = Period::create('2023-09-12 09:00:00', '2023-09-17 02:18:31');
 
@@ -61,7 +62,8 @@ final class DifferenceTest extends TestCase
         $this->assertEquals('2023-09-20 23:59:59', $secondPeriod->getEndDate()->toDateTimeString());
     }
 
-    public function testDifferencePeriodContainedInsideAnotherInverted(): void {
+    public function testDifferencePeriodContainedInsideAnotherInverted(): void
+    {
         $period = Period::create('2023-09-12 09:00:00', '2023-09-17 02:18:31');
         $anotherPeriod = Period::create('2023-09-10 00:00:00', '2023-09-20 23:59:59');
 
