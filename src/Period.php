@@ -29,7 +29,8 @@ class Period extends CarbonPeriodExtended
     /**
      * Get the intersection between two periods if any.
      */
-    public function intersection(Period $period): Period|null {
+    public function intersection(Period $period): Period|null
+    {
         if ($this->has($period)) {
             return $period;
         }
