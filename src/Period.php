@@ -15,35 +15,45 @@ class Period extends CarbonPeriodExtended
     }
 
     /**
-     * Get the shared minutes between two periods if any.
+     * Unify two periods into one. Using the minimum start date and the maximum end date.
+     * This unifies any two periods into one, even if they don't overlap.
      */
-    public function overlappedMinutes(Period $period): int
+    public function union(Period $period): Period
     {
-        if ($this->has($period)) {
-            return $period->getMinutes();
-        }
+        $startDate = $this->getStartDate()->min($period->getStartDate());
+        $endDate = $this->getEndDate()->max($period->getEndDate());
 
-        if ($period->has($this)) {
-            return $this->getMinutes();
-        }
-
-        if ($this->contains($period->getStartDate())) {
-            return $this->getEndDate()->diffInMinutes($period->getStartDate());
-        }
-
-        if ($this->contains($period->getEndDate())) {
-            return $period->getEndDate()->diffInMinutes($this->getStartDate());
-        }
-
-        return 0;
+        return Period::create($startDate, $endDate);
     }
 
     /**
-     * Checks if a period overlaps with another period, despite the amount of overlapped time.
+     * Get the intersection between two periods if any.
+     */
+    public function intersection(Period $period): Period|null {
+        if ($this->has($period)) {
+            return $period;
+        }
+
+        if ($period->has($this)) {
+            return $this;
+        }
+
+        if ($this->contains($period->getStartDate()) || $this->contains($period->getEndDate())) {
+            $startDate = $this->getStartDate()->max($period->getStartDate());
+            $endDate = $this->getEndDate()->min($period->getEndDate());
+
+            return Period::create($startDate, $endDate);
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if a period overlaps with another period.
      */
     public function touches(Period $period): bool
     {
-        return ($this->overlappedMinutes($period) > 0) ? true : false;
+        return (is_null($this->intersection($period))) ? false : true;
     }
 
     /**
