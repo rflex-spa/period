@@ -47,6 +47,16 @@ Returns the total number of hours of the period.
 $period->getHours();
 ```
 
+## union($period, $intersects): Period
+Returns a new Period that is the sum of another two Periods. By default it will sum two periods without
+validating if they intersect. With the `$intersects` in `true` you can specify that you only need
+to sum two periods that intersect with each other.
+```php
+$period = Period::between(Carbon::now(), Carbon::now()->addDay());
+$period2 = Period::between(carbon::now(), Carbon::now()->addDays(2));
+$unifiedPeriod = $period->union($period2); // Returns a new unified Period.
+```
+
 ## intersection($period): Period
 Get the shared period between two other periods.
 ```php
@@ -61,6 +71,25 @@ Checks if a period intersects with another.
 $period = Period::between(Carbon::now(), Carbon::now()->addDay());
 $period2 = Period::between(carbon::now(), Carbon::now()->addDays(2));
 $period->intersects($period2); // Returns true.
+```
+
+## difference($period): array|null
+Returns the difference between two Periods. This function can return more than one Period
+if the original Period was cut in different pieces.
+`[totalLengthInSeconds, 'periods' => []]`
+```php
+$period = Period::between(Carbon::now(), Carbon::now()->addDay());
+$period2 = Period::between(carbon::now(), Carbon::now()->addDays(2));
+$unifiedPeriod = $period->difference($period2); // Returns an array.
+```
+
+## differenceWithEvent($event, $point): int
+Returns the difference in seconds between a Period and an Event. The comparison is between the Event
+and a point of the Period. 0 = start, 1 = end.
+```php
+$period = Period::between(Carbon::now(), Carbon::now()->addDay());
+$event = Event::create(carbon::now());
+$seconds = $period->differenceWithEvent($event); // Returns the difference between the two in seconds.
 ```
 
 ## setLengthInSeconds($seconds): void
