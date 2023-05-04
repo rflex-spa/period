@@ -2,137 +2,119 @@
 
 namespace Rflex;
 
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
+use Rflex\CarbonExtended\CarbonPeriodExtended;
 
-class Period extends CarbonPeriod
+class Period extends CarbonPeriodExtended
 {
     /**
-     * Check if the period has another period inside.
-     *
-     * @param Period
-     *
-     * @return bool
+     * Check if the period contains another period inside.
      */
-    public function has(Period $period) {
+    public function has(Period $period): bool
+    {
         return $this->contains($period->getStartDate()) && $this->contains($period->getEndDate());
     }
 
     /**
-     * Add one day to the period.
-     *
-     * @return void
+     * Unify two periods into one. Using the minimum start date and the maximum end date.
+     * By default unifies without intersection between the periods, but it can be pointed to check intersection.
      */
-    public function addDay() {
-        $this->setDates($this->getStartDate()->addDay(), $this->getEndDate()->addDay());
+    public function union(Period $period, bool $intersects = false): Period|null
+    {
+        if ($intersects) {
+            if (!$this->intersects($period)) {
+                return null;
+            }
+        }
+
+        $startDate = $this->getStartDate()->min($period->getStartDate());
+        $endDate = $this->getEndDate()->max($period->getEndDate());
+
+        return Period::create($startDate, $endDate);
     }
 
     /**
-     * Add a number of days to the period.
-     *
-     * @param int
-     *
-     * @return void
+     * Get the intersection between two periods if any.
      */
-    public function addDays(int $days) {
-        $this->setDates($this->getStartDate()->addDays($days), $this->getEndDate()->addDays($days));
-    }
-
-    /**
-     * Subtract one day to the period.
-     *
-     * @return void
-     */
-    public function subDay() {
-        $this->setDates($this->getStartDate()->subDay(), $this->getEndDate()->subDay());
-    }
-
-    /**
-     * Subtract a number of days to the period.
-     *
-     * @param int
-     *
-     * @return void
-     */
-    public function subDays(int $days) {
-        $this->setDates($this->getStartDate()->subDays($days), $this->getEndDate()->subDays($days));
-    }
-
-    /**
-     * Returns the total number of minutes of the period.
-     *
-     * @return int
-     */
-    public function getMinutes() {
-        return $this->getEndDate()->diffInMinutes($this->getStartDate());
-    }
-
-    /**
-     * Returns the total number of hours of the period.
-     *
-     * @return int
-     */
-    public function getHours() {
-        return $this->getEndDate()->diffInHours($this->getStartDate());
-    }
-
-    /**
-     * Get the shared minutes between two periods if any.
-     *
-     * @param Period
-     *
-     * @return int
-     */
-    public function overlappedMinutes(Period $period) {
+    public function intersection(Period $period): Period|null
+    {
         if ($this->has($period)) {
-            return $period->getMinutes();
+            return $period;
         }
 
         if ($period->has($this)) {
-            return $this->getMinutes();
+            return $this;
         }
 
-        if($this->contains($period->getStartDate())) {
-            return $this->getEndDate()->diffInMinutes($period->getStartDate());
+        if ($this->contains($period->getStartDate()) || $this->contains($period->getEndDate())) {
+            $startDate = $this->getStartDate()->max($period->getStartDate());
+            $endDate = $this->getEndDate()->min($period->getEndDate());
+
+            return Period::create($startDate, $endDate);
         }
 
-        if($this->contains($period->getEndDate())) {
-            return $period->getEndDate()->diffInMinutes($this->getStartDate());
-        }
-
-        return 0;
+        return null;
     }
 
     /**
-     * Checks if a period overlaps with another period, despite the amount of overlapped time.
-     *
-     * @param Period
-     *
-     * @return boolean
+     * Checks if a period intersects with another period.
      */
-    public function touches(Period $period) {
-        return ($this->overlappedMinutes($period) > 0) ? true : false;
+    public function intersects(Period $period): bool
+    {
+        return (is_null($this->intersection($period))) ? false : true;
     }
 
     /**
-     * Set the length of the period in minutes from the start.
-     *
-     * @param int
-     *
-     * @return void
+     * Subtract two periods and returns the:
+     * Total time of the resultant periods
+     * An array with all the periods.
      */
-    public function setLengthInMinutes(int $minutes) {
-        $this->setEndDate($this->getStartDate()->addMinutes($minutes));
+    public function difference(Period $subtractingPeriod): array|null
+    {
+        if ($this->intersects($subtractingPeriod)) {
+            // The period holds the subtracting period.
+            if ($this->has($subtractingPeriod)) {
+                $first = Period::create($this->getStartDate(), $subtractingPeriod->getStartDate()->subSeconds(1));
+                $second = Period::create($subtractingPeriod->getEndDate()->addSeconds(1), $this->getEndDate());
+
+                return [$first->getSeconds() + $second->getSeconds(), 'periods' => [$first, $second]];
+            }
+
+            // The period was subtracted on it's entirety.
+            if ($subtractingPeriod->has($this)) {
+                return null;
+            }
+
+            // The subtracting period is at the end of the period.
+            if ($this->contains($subtractingPeriod->getStartDate())) {
+                $result = Period::create($this->getStartDate(), $subtractingPeriod->getStartDate()->subSeconds(1));
+
+                return [$result->getSeconds(), 'periods' => [$result]];
+            }
+
+            // The subtracting period is at the beginning of the period.
+            if ($this->contains($subtractingPeriod->getEndDate())) {
+                $result = Period::create($subtractingPeriod->getEndDate()->addSeconds(1), $this->getEndDate());
+
+                return [$result->getSeconds(), 'periods' => [$result]];
+            }
+        }
+
+        return null;
     }
 
     /**
-     * Set the length of the period in hours from the start.
+     * Returns the total seconds of difference between the start/end of a period and an event.
+     * point = 0 (start)
+     * point = 1 (end).
      *
-     * @param int
-     *
-     * @return void
+     * Negative result means that the event is before the period point.
+     * Zero means that the event is at the same moment than the period point.
+     * Positive result means that the event is after the period point.
      */
-    public function setLengthInHours(int $hours) {
-        $this->setEndDate($this->getStartDate()->addHours($hours));
+    public function differenceWithEvent(Event $event, int $point): int
+    {
+        $comparationPoint = ($point === 0) ? $this->getStartDate() : $this->getEndDate();
+
+        return $event->timestamp - $comparationPoint->timestamp;
     }
 }
