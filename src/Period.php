@@ -105,7 +105,7 @@ class Period extends CarbonPeriodExtended
     /**
      * Returns the total seconds of difference between the start/end of a period and an event.
      * point = 0 (start)
-     * point = 1 (end)
+     * point = 1 (end).
      *
      * Negative result means that the event is before the period point.
      * Zero means that the event is at the same moment than the period point.
