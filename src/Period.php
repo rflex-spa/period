@@ -18,7 +18,7 @@ class Period extends CarbonPeriodExtended
      * Unify two periods into one. Using the minimum start date and the maximum end date.
      * By default unifies without intersection between the periods, but it can be pointed to check intersection.
      */
-    public function union(Period $period, bool $intersects = false): Period|null
+    public function union(Period $period, bool $intersects = false): ?Period
     {
         if ($intersects) {
             if (!$this->intersects($period)) {
@@ -35,7 +35,7 @@ class Period extends CarbonPeriodExtended
     /**
      * Get the intersection between two periods if any.
      */
-    public function intersection(Period $period): Period|null
+    public function intersection(Period $period): ?Period
     {
         if ($this->has($period)) {
             return $period;
@@ -68,7 +68,7 @@ class Period extends CarbonPeriodExtended
      * Total time of the resultant periods
      * An array with all the periods.
      */
-    public function difference(Period $subtractingPeriod): array|null
+    public function difference(Period $subtractingPeriod): ?array
     {
         if ($this->intersects($subtractingPeriod)) {
             // The period holds the subtracting period.
