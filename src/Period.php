@@ -102,6 +102,14 @@ class Period extends CarbonPeriodExtended
         return null;
     }
 
+    public function differenteWithTime(Time $startTime, Time $endTime): ?Period
+    {
+        $comparisonPeriod = Period::create($this->getStartDate()->toDateString().' '.$startTime->getTime());
+        //$comparisonPeriod->setLengthInHours();
+
+        return $this->intersection($comparisonPeriod);
+    }
+
     /**
      * Returns the total seconds of difference between the start/end of a period and an event.
      * point = 0 (start)
