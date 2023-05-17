@@ -102,9 +102,6 @@ class Period extends CarbonPeriodExtended
         return null;
     }
 
-    /**
-     * 
-     */
     public function differenceWithTime(Time $startTime, Time $endTime): ?Period
     {
         $timeDifference = $startTime->difference($endTime);
