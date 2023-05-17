@@ -7,6 +7,19 @@ use Rflex\CarbonExtended\CarbonPeriodExtended;
 class Period extends CarbonPeriodExtended
 {
     /**
+     * Creates a Period from a Date and two Times.
+     */
+    public static function createFromDateAndTimes(Date $startDate, Time $startTime, Time $endTime): Period
+    {
+        $timeDifference = $startTime->difference($endTime);
+
+        $period = Period::create($startDate->toDateString().' '.$startTime->format('H:i:s'));
+        $period->setLengthInSeconds($timeDifference->getSeconds());
+
+        return $period;
+    }
+
+    /**
      * Check if the period contains another period inside.
      */
     public function has(Period $period): bool
@@ -100,16 +113,6 @@ class Period extends CarbonPeriodExtended
         }
 
         return null;
-    }
-
-    public function differenceWithTime(Time $startTime, Time $endTime): ?Period
-    {
-        $timeDifference = $startTime->difference($endTime);
-
-        $comparisonPeriod = Period::create($this->getStartDate()->toDateString().' '.$startTime->format('H:i:s'));
-        $comparisonPeriod->setLengthInSeconds($timeDifference->getSeconds());
-
-        return $this->intersection($comparisonPeriod);
     }
 
     /**
