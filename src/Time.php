@@ -2,21 +2,25 @@
 
 namespace Rflex;
 
-use Carbon\Carbon;
+use Rflex\CarbonExtended\CarbonExtended;
 
-class Time extends Carbon
+class Time extends CarbonExtended
 {
-    public function difference(Time $endTime): ?int
+    public static function createFromSeconds(int $seconds): Time {
+        $hours = (int) floor($seconds / 3600);
+        $minutes = (int) floor(($seconds / 60) % 60);
+        $seconds = $seconds % 60;
+
+        return self::createFromTime($hours, $minutes, $seconds);
+    }
+
+    public function difference(Time $endTime): Time
     {
-        if ($this->equalTo($endTime))
-            return 24;
-        
-        if ($this->lessThan($endTime))
-            return $this->diffInHours($endTime);
-
+        // If the start time is greater than the end time, we need to calculate the difference
+        // by (total seconds in a day) - (difference between times)
         if ($this->greaterThan($endTime))
-            return 
-
-        return null;
+            return self::createFromSeconds((24 * 60 * 60) - $endTime->diffInSeconds($this));
+        else
+            return self::createFromSeconds($this->diffInSeconds($endTime));
     }
 }

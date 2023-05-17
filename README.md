@@ -13,6 +13,17 @@ use Rflex\Period;
 use Rflex\Event; // Extension of the Carbon class.
 ```
 
+# Testing
+## PHPUnit
+```bash
+./vendor/phpunit/phpunit/phpunit
+```
+
+## PHPStan
+```bash
+./vendor/bin/phpstan analyse
+```
+
 # Available methods
 
 ## addDay() and addDays($days): void

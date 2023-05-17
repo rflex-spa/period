@@ -102,10 +102,15 @@ class Period extends CarbonPeriodExtended
         return null;
     }
 
-    public function differenteWithTime(Time $startTime, Time $endTime): ?Period
+    /**
+     * 
+     */
+    public function differenceWithTime(Time $startTime, Time $endTime): ?Period
     {
-        $comparisonPeriod = Period::create($this->getStartDate()->toDateString().' '.$startTime->getTime());
-        //$comparisonPeriod->setLengthInHours();
+        $timeDifference = $startTime->difference($endTime);
+
+        $comparisonPeriod = Period::create($this->getStartDate()->toDateString().' '.$startTime->format('H:i:s'));
+        $comparisonPeriod->setLengthInSeconds($timeDifference->getSeconds());
 
         return $this->intersection($comparisonPeriod);
     }
