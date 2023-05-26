@@ -87,6 +87,32 @@ class CarbonPeriodExtended extends CarbonPeriod
     }
 
     /**
+     * Returns the number of days present in the period.
+     */
+    public function getDays(): int
+    {
+        return count($this->getListOfDays());
+    }
+
+    /**
+     * Returns the days present in the period as an array of strings with Y-m-d format.
+     */
+    public function getListOfDays(): array
+    {
+        $period = new self($this->getStartDate(), $this->getEndDate());
+
+        // All the days of the period as Date strings in an array.
+        $days = array();
+
+        while ($period->getStartDate()->format('Y-m-d') <= $period->getEndDate()->format('Y-m-d')) {
+            array_push($days, $period->getStartDate()->format('Y-m-d'));
+            $period->addDay(true, false);
+        }
+
+        return $days;
+    }
+
+    /**
      * Set the length of the period in seconds from the start.
      */
     public function setLengthInSeconds(int $seconds): void
