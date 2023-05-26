@@ -102,7 +102,7 @@ class CarbonPeriodExtended extends CarbonPeriod
         $period = new self($this->getStartDate(), $this->getEndDate());
 
         // All the days of the period as Date strings in an array.
-        $days = array();
+        $days = [];
 
         while ($period->getStartDate()->format('Y-m-d') <= $period->getEndDate()->format('Y-m-d')) {
             array_push($days, $period->getStartDate()->format('Y-m-d'));
