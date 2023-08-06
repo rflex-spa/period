@@ -7,6 +7,62 @@ use Carbon\CarbonPeriod;
 class CarbonPeriodExtended extends CarbonPeriod
 {
     /**
+     * Add a number of seconds to the period.
+     */
+    public function addSeconds(int $seconds, bool $start, bool $end): void
+    {
+        if ($start) {
+            $this->setStartDate($this->getStartDate()->addSeconds($seconds));
+        }
+
+        if ($end) {
+            $this->setEndDate($this->getEndDate()->addSeconds($seconds));
+        }
+    }
+
+    /**
+     * Subtract a number of seconds to the period.
+     */
+    public function subSeconds(int $seconds, bool $start, bool $end): void
+    {
+        if ($start) {
+            $this->setStartDate($this->getStartDate()->subSeconds($seconds));
+        }
+
+        if ($end) {
+            $this->setEndDate($this->getEndDate()->subSeconds($seconds));
+        }
+    }
+
+    /**
+     * Add a number of minutes to the period.
+     */
+    public function addMinutes(int $minutes, bool $start, bool $end): void
+    {
+        if ($start) {
+            $this->setStartDate($this->getStartDate()->addMinutes($minutes));
+        }
+
+        if ($end) {
+            $this->setEndDate($this->getEndDate()->addMinutes($minutes));
+        }
+    }
+
+    /**
+     * Subtract a number of minutes to the period.
+     */
+    public function subMinutes(int $minutes, bool $start, bool $end): void
+    {
+        if ($start) {
+            $this->setStartDate($this->getStartDate()->subMinutes($minutes));
+        }
+
+        if ($end) {
+            $this->setEndDate($this->getEndDate()->subMinutes($minutes));
+        }
+    }
+
+    /**
      * Add one day to the Carbon period.
      */
     public function addDay(bool $start, bool $end): void
